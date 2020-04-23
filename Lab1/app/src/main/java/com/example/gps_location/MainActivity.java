@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -15,13 +18,17 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient client;
 
-    TextView tvLocation;
+    TextView tvLocation, tvCity;
     Button btnGps;
     private double longitude, latitude;
 
@@ -35,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         client = LocationServices.getFusedLocationProviderClient(this);
 
         tvLocation = findViewById(R.id.textLocation);
+        tvCity = findViewById(R.id.textCity);
         btnGps = findViewById(R.id.buttonLocation);
 
         btnGps.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +61,21 @@ public class MainActivity extends AppCompatActivity {
                             longitude = location.getLongitude();
                             latitude = location.getLatitude();
                             tvLocation.setText("Longitude:" + longitude +"\nLatitude:" + latitude);
+
+                            Geocoder myGeo = new Geocoder(MainActivity.this, Locale.getDefault());
+                            List<Address> myAddress = null;
+                            try {
+                                myAddress = myGeo.getFromLocation(latitude, longitude, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (myAddress.size() > 0){
+                                tvCity.setText(myAddress.get(0).getLocality() + "\n"
+                                + myAddress.get(0).getCountryName());
+                            } else {
+                                return;
+                            }
                         }
 
                     }
