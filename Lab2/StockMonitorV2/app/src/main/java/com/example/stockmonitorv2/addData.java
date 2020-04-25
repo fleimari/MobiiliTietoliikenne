@@ -15,16 +15,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
-public class fetchData extends AsyncTask<Void, Void, Void>  {
+import static com.example.stockmonitorv2.MainActivity.etID;
+import static com.example.stockmonitorv2.MainActivity.tvData;
+
+public class addData extends AsyncTask<Void, Void, Void>  {
 
     String data = "";
-    String dataParsed = "";
     String singleParsed = "";
+
 
     @Override
     protected Void doInBackground(Void... voids) {
         try {
-            URL url = new URL("https://financialmodelingprep.com/api/company/price/AAPL,GOOGL,FB,NOK?datatype=json");
+            URL url = new URL("https://financialmodelingprep.com/api/company/price/" + etID.getText().toString()+ "?datatype=json");
 
             HttpURLConnection mConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = mConnection.getInputStream();
@@ -44,8 +47,8 @@ public class fetchData extends AsyncTask<Void, Void, Void>  {
                 double stockPrice = stock.getDouble("price");
 
                 Log.d("kk", "Osake: " + key + "hinta: " + stockPrice);
-                singleParsed = "Osake: " + key + "\nhinta:" + stockPrice;
-                dataParsed = dataParsed + singleParsed + "\n\n";
+                singleParsed = "Osake: " + key + "\nhinta:" + stockPrice+ "\n\n";
+
             }
 
         } catch (MalformedURLException e) {
@@ -63,6 +66,7 @@ public class fetchData extends AsyncTask<Void, Void, Void>  {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        MainActivity.tvData.setText(this.dataParsed);
+        MainActivity.tvData.append(this.singleParsed);
+        etID.setText(null);
     }
 }
