@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StrictMode.ThreadPolicy policy =
+                new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         mTextView = findViewById(R.id.etPrint);
         mEditText = findViewById(R.id.myET);
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String myAddress = "https://" + mEditText.getText().toString();
+                String myAddress = mEditText.getText().toString();
 
                 Log.d("kk", myAddress);
                 makeHttprequest(myAddress);
@@ -54,14 +58,12 @@ public class MainActivity extends AppCompatActivity {
     protected void makeHttprequest(String urlString) {
         try {
             URL url = new URL(urlString);
-            HttpURLConnection mConnection = (HttpURLConnection) url.openConnection();
-            mConnection.setRequestMethod("GET");
 
-            InputStream inputStream = mConnection.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String line = bufferedReader.readLine();
-            mTextView.setText(line);
+            HttpURLConnection mConnection = (HttpURLConnection) url.openConnection();
+            InputStream inputStreamReader = new BufferedInputStream(mConnection.getInputStream());
+            String result = fromStream(inputStreamReader);
+
+            mTextView.setText(result);
             mConnection.disconnect();
         }
         catch (Exception e) {e.printStackTrace();}
