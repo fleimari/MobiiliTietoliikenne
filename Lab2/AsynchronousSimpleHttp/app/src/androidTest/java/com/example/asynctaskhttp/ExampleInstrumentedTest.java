@@ -1,4 +1,4 @@
-package com.example.asynchronoussimplehttp;
+package com.example.asynctaskhttp;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.example.asynchronoussimplehttp", appContext.getPackageName());
+        assertEquals("com.example.asynctaskhttp", appContext.getPackageName());
     }
 }

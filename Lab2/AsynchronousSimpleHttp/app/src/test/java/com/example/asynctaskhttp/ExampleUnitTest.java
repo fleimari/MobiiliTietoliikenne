@@ -1,4 +1,4 @@
-package com.example.asynchronoussimplehttp;
+package com.example.asynctaskhttp;
 
 import org.junit.Test;
 

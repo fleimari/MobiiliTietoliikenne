@@ -1,2 +1,2 @@
-rootProject.name='AsynchronousSimpleHttp'
+rootProject.name='AsyncTaskHTTP'
 include ':app'
