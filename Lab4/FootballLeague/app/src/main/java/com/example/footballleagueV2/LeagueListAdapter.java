@@ -1,6 +1,7 @@
 package com.example.footballleagueV2;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-class LeagueListAdapter extends ArrayAdapter<League> {
+public class LeagueListAdapter extends ArrayAdapter<League> {
 
     private static final String TAG = "LeagueListAdapter";
 
@@ -35,12 +36,17 @@ class LeagueListAdapter extends ArrayAdapter<League> {
 
         League nLeague = new League(name, nameID);
 
+        nLeague.setLeagueName(name);
+        nLeague.setLeagueID(nameID);
+
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
 
         TextView tvName = (TextView) convertView.findViewById(R.id.tvLeagueName);
 
         tvName.setText(name);
+
+        Log.d("getView", name);
 
         return convertView;
     }

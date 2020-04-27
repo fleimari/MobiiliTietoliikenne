@@ -1,12 +1,28 @@
 package com.example.footballleagueV2;
 
+import java.util.ArrayList;
+
 public class League {
     private String leagueName;
     private int leagueID;
 
+    public static ArrayList<League> leagueList = new ArrayList<League>();
+
+    public static ArrayList<League> getLeagueList() {
+        return leagueList;
+    }
+
+    public void addLeagueList(League newLeague){
+        leagueList.add(newLeague);
+    }
+
     public League(String leagueName, int leagueID) {
         this.leagueName = leagueName;
         this.leagueID = leagueID;
+    }
+
+    public League() {
+
     }
 
     public String getLeagueName() {
@@ -17,7 +33,7 @@ public class League {
         this.leagueName = leagueName;
     }
 
-    public int getLeagueID() {
+     public int getLeagueID() {
         return leagueID;
     }
 
