@@ -2,15 +2,13 @@ package com.example.footballleagueV2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,18 +21,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public String jsonUrl = "http://api.football-data.org/v2/areas";
+    public String jsonUrl = "https://api.football-data.org/v2/areas";
     public ListView mListView;
     Button btnGet;
-
     private RequestQueue mQueue;
-
     LeagueListAdapter adapter;
 
+    public static String areaUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +48,16 @@ public class MainActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                League gLeague = new League();
+                int itemId = (int) parent.getItemIdAtPosition(position);
 
-                String areaName = gLeague.getLeagueName();
-                int areaID = gLeague.getLeagueID();
-                String areaUrl = "http://api.football-data.org/v2/competitions?areas=" + areaID;
+                String areaName = League.getLeagueList().get(itemId).getLeagueName();
+                int areaID = League.getLeagueList().get(itemId).getLeagueID();
+                String areaUrl = "https://api.football-data.org/v2/competitions?areas=" + areaID;
                 Log.d("areaUrl", areaUrl + " Name: " + areaName);
+
+                Intent areaIntent = new Intent(MainActivity.this, AreaActivity.class);
+                areaIntent.putExtra("url", areaUrl);
+                startActivity(areaIntent);
             }
         });
         
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 jsonParse();
-                Log.d("tagLIST", League.getLeagueList().toString());
+                Log.d("tagLIST", League.leagueList.toString());
             }
         });
     }
@@ -87,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
                                 int nameID = areas.getInt("id");
 
                                 League mLeague = new League(name, nameID);
-                                mLeague.addLeagueList(mLeague);
+
+                                League.leagueList.add(mLeague);
                                 Log.d("area", mLeague.getLeagueName() + mLeague.getLeagueID());
                             }
                             mListView.setAdapter(adapter);
